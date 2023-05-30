@@ -55,3 +55,5 @@ module.exports = (sequelize:any, DataTypes:any) => {
   });
   return User;
 };
+
+export default UserAttributes;

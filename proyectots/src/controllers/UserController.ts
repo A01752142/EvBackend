@@ -1,9 +1,15 @@
 import { Request,Response } from "express";
 import AbstractController from "./AbstractController";
+import { v4 as uuidv4 } from 'uuid';
 
 class UserController extends AbstractController{
     protected validateBody(type: any) {
         throw new Error("Method not implemented.");
+    }
+    
+
+    public generateUserId(): string {
+    return uuidv4();
     }
         
     //Singleton
@@ -31,6 +37,7 @@ class UserController extends AbstractController{
 
     private postCreateUser(req:Request,res:Response){
         res.status(200).send("Registro exitoso");
+
     }
 }
 

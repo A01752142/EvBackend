@@ -15,6 +15,7 @@ class RecaudacionController extends AbstractController{
         }
         //si no exite la creo
         this.instance = new RecaudacionController('recaudacion');
+
         return this.instance;
     } 
 
