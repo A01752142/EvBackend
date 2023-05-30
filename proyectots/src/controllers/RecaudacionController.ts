@@ -14,7 +14,8 @@ class RecaudacionController extends AbstractController{
             return this.instance;
         }
         //si no exite la creo
-        this.instance = new RecaudacionController('auth');
+        this.instance = new RecaudacionController('recaudacion');
+
         return this.instance;
     } 
 
@@ -33,6 +34,7 @@ class RecaudacionController extends AbstractController{
     private configureGoal(req:Request,res:Response){
         res.status(200).send("Registro exitoso");
     }
+
     private getTotalDonations(req:Request,res:Response){
         res.status(200).send("Registro exitoso");
     }

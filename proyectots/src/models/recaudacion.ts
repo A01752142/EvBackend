@@ -5,16 +5,19 @@ import sequelize from 'sequelize/types/sequelize';
 
 interface RecaudacionAttributes{
   id:number,
-  cantidad:number,
-  status:string
+  goal:number,
+  current:number,
+  status:string,
 }
 
 
 module.exports = (sequelize:any, DataTypes:any) => {
   class Recaudacion extends Model<RecaudacionAttributes> implements RecaudacionAttributes {
     id!:number;
-    cantidad!:number;
-    status!:string;    
+    goal!:number;
+    current!:number;
+    status!:string; 
+    
     // static associate(models:any) {
       // define association here
     //   Recaudacion.belongsToMany(models.User,{
@@ -29,13 +32,17 @@ module.exports = (sequelize:any, DataTypes:any) => {
       primaryKey:true,
       autoIncrement:true
     },
-    cantidad:{
+    goal:{
       type:DataTypes.INTEGER,
       allowNull:false      
     },
     status:{
       type:DataTypes.STRING,
       allowNull:false      
+    },
+    current:{
+        type:DataTypes.STRING,
+        allowNull:false 
     }
   }, {
     sequelize,
