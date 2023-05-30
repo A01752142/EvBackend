@@ -7,7 +7,6 @@ interface RecaudacionAttributes{
   goal:number,
   current:number,
   status:string,
-  proposito:string
 }
 
 
@@ -42,11 +41,7 @@ module.exports = (sequelize:any, DataTypes:any) => {
       allowNull:false      
     },
     current:{
-        type:DataTypes.INTEGER,
-        allowNull:false 
-    },
-    proposito:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.STRING,
         allowNull:false 
     }
   }, {

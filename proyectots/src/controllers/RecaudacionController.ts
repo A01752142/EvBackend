@@ -61,6 +61,13 @@ class RecaudacionController extends AbstractController{
         res.status(200).send("Registro exitoso");
     }
 
+    private configureGoal(req:Request,res:Response){
+        res.status(200).send("Registro exitoso");
+    }
+
+    private getTotalDonations(req:Request,res:Response){
+        res.status(200).send("Registro exitoso");
+    }
 }
 
 export default RecaudacionController;
