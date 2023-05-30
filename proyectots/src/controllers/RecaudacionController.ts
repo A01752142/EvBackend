@@ -14,7 +14,7 @@ class RecaudacionController extends AbstractController{
             return this.instance;
         }
         //si no exite la creo
-        this.instance = new RecaudacionController('user');
+        this.instance = new RecaudacionController('auth');
         return this.instance;
     } 
 
