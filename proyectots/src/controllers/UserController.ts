@@ -7,7 +7,6 @@ class UserController extends AbstractController{
         throw new Error("Method not implemented.");
     }
     
-
     public generateUserId(): string {
     return uuidv4();
     }
@@ -37,7 +36,6 @@ class UserController extends AbstractController{
 
     private postCreateUser(req:Request,res:Response){
         res.status(200).send("Registro exitoso");
-
     }
 }
 

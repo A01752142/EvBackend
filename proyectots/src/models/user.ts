@@ -6,8 +6,10 @@ interface UserAttributes{
   awsCognitoId:string,
   name:string,
   role:string,
-  email:string
+  email:string,
+  recaudacion:RecaudacionAttributes
 }
+
 
 export enum UserRoles{
     ADMIN = 'ADMIN',
@@ -16,12 +18,19 @@ export enum UserRoles{
     CUSTOMER = 'CUSTOMER'
 }
 
+interface RecaudacionAttributes{
+  goal:number,
+  current:number,
+  proposito:string
+}
+
 module.exports = (sequelize:any, DataTypes:any) => {
   class User extends Model<UserAttributes> implements UserAttributes {
     awsCognitoId!:string;
     name!:string;
     role!:string;
     email!:string;
+    recaudacion!:RecaudacionAttributes;
     static associate(models:any) {
       // define association here
       User.belongsToMany(models.Project,{
@@ -48,6 +57,10 @@ module.exports = (sequelize:any, DataTypes:any) => {
       type:DataTypes.STRING,
       allowNull:false,
       unique:true
+    },
+    recaudacion:{
+      type:DataTypes.JSON,
+      allowNull:false,
     }
   }, {
     sequelize,

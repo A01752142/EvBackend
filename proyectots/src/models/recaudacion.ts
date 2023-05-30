@@ -1,20 +1,24 @@
 'use strict';
 
-import {DataTypes, Model} from 'sequelize';
-import sequelize from 'sequelize/types/sequelize';
+import {Model} from 'sequelize';
 
 interface RecaudacionAttributes{
   id:number,
-  cantidad:number,
-  status:string
+  goal:number,
+  current:number,
+  status:string,
+  proposito:string
 }
 
 
 module.exports = (sequelize:any, DataTypes:any) => {
   class Recaudacion extends Model<RecaudacionAttributes> implements RecaudacionAttributes {
     id!:number;
-    cantidad!:number;
-    status!:string;    
+    goal!:number;
+    current!:number;
+    status!:string; 
+    proposito!:string;
+    
     // static associate(models:any) {
       // define association here
     //   Recaudacion.belongsToMany(models.User,{
@@ -29,17 +33,25 @@ module.exports = (sequelize:any, DataTypes:any) => {
       primaryKey:true,
       autoIncrement:true
     },
-    cantidad:{
+    goal:{
       type:DataTypes.INTEGER,
       allowNull:false      
     },
     status:{
       type:DataTypes.STRING,
       allowNull:false      
+    },
+    current:{
+        type:DataTypes.INTEGER,
+        allowNull:false 
+    },
+    proposito:{
+        type:DataTypes.INTEGER,
+        allowNull:false 
     }
   }, {
     sequelize,
-    modelName: 'Project',
+    modelName: 'Recaudacion',
   });
   return Recaudacion;
 };
