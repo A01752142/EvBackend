@@ -77,6 +77,14 @@ class CognitoService{
             .digest('base64');
     }
 
+    public async donacion(id:string,current:number,[]){
+        const params={
+            Id:id,
+            Amount:current,
+        }
+        return await this.donacion(params).promise();
+    }
+
 }
 
 export default CognitoService;

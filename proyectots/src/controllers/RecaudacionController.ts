@@ -3,6 +3,7 @@ import AbstractController from "./AbstractController";
 import { v4 as uuidv4 } from 'uuid';
 import RecaudacionModel from "../modelsNOSQL/recaudacionNOSQL";
 import db from "../models";
+import UserModel from "../modelsNOSQL/userNOSQL";
 
 class RecaudacionController extends AbstractController{
     protected validateBody(type: any) {
@@ -15,6 +16,7 @@ class RecaudacionController extends AbstractController{
 
     //Singleton
     private static instance:RecaudacionController;
+
     public static getInstance():AbstractController{
         //si existe la instancia la regreso
         if(this.instance){
@@ -33,10 +35,34 @@ class RecaudacionController extends AbstractController{
     }
 
     //Los métodos asociados a las rutas
-    private makeDonation(req:Request,res:Response){
-        res.status(200).send("Servicio en línea  😄");
+    private async makeDonation(req:Request,res:Response){
+        //res.status(200).send("Servicio en línea  😄");
+        const {id,goal,current,status,proposito} = req.body;
+        try{
+            const id_correct = await RecaudacionModel.donacion (id,current,[{
+                id:this.generateUserId, //destino de donacion
+                current:0
+            }])
+            console.log('Donacion exitosa',id_correct);
+            //Creación del usuario dentro de la BDNoSQL-DynamoDB
+            await UserModel.create({
+                id,
+                current
+            },
+            {overwrite:false});
+            //Creación del usuario dentro de RDS-MySQL
+            await db['Recaudacion'].create(
+                {
+                    id,
+                    current
+                }
+            )
+            res.status(201).send({message:"Donation Ready"})
+        }catch(error:any){
+            res.status(500).send({code:error.code,message:error.message});
+        }
     }
-    private async configureGoal(req:Request,res:Response){
+    private configureGoal(req:Request,res:Response){
         res.status(200).send("Registro exitoso");
         /*const {goal,proposito} = req.body;
         await RecaudacionModel.create({
@@ -58,14 +84,6 @@ class RecaudacionController extends AbstractController{
     */
     }
     private  getTotalDonations(req:Request,res:Response){
-        res.status(200).send("Registro exitoso");
-    }
-
-    private configureGoal(req:Request,res:Response){
-        res.status(200).send("Registro exitoso");
-    }
-
-    private getTotalDonations(req:Request,res:Response){
         res.status(200).send("Registro exitoso");
     }
 }
