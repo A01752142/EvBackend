@@ -2,29 +2,28 @@
 
 import {Model} from 'sequelize';
 
-interface ProjectUserAttributes{
-  ProjectId:number,
-  UserId:string,
-  budget:number
+interface RecaudacionUserAttributes{
+  RecaudacionId:string,
+  UserId:string
 }
 
 
 module.exports = (sequelize:any, DataTypes:any) => {
-  class ProjectUser extends Model<ProjectUserAttributes> implements ProjectUserAttributes {
-    ProjectId!:number;
+  class RecaudacionUser extends Model<RecaudacionUserAttributes> implements RecaudacionUserAttributes {
+    RecaudacionId!: string;
+    ProjectId!:string;
     UserId!:string;
-    budget!:number;   
     static associate(models:any) {
       // define association here      
     }
   }
-  ProjectUser.init({
-    ProjectId:{
-      type:DataTypes.INTEGER,
+  RecaudacionUser.init({
+    RecaudacionId:{
+      type:DataTypes.STRING,
       allowNull:false,
       primaryKey:true,
       references:{
-        model:'Project',
+        model:'Recaudacion',
         key:'id'
       }
     },
@@ -37,10 +36,9 @@ module.exports = (sequelize:any, DataTypes:any) => {
         key:'awsCognitoId'
       }      
     },
-    budget:DataTypes.DECIMAL(10,2)
   }, {
     sequelize,
-    modelName: 'ProjectUser',
+    modelName: 'RecaudacionUser',
   });
-  return ProjectUser;
+  return RecaudacionUser;
 };

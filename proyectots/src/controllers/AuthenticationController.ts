@@ -13,7 +13,7 @@ class AuthenticationController extends AbstractController{
     public static getInstance():AbstractController{
         if(this.instance)
             return this.instance;
-        this.instance = new AuthenticationController("auth");
+        this.instance = new AuthenticationController("creador");
         return this.instance;
     }
 
