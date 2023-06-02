@@ -17,6 +17,11 @@ module.exports = (sequelize:any, DataTypes:any) => {
     current!:number;
     status!:string; 
     proposito!:string;
+    static associate(models:any){
+      Recaudacion.belongsToMany(models.User,{
+        through:"RecaudacionUser"
+      })
+    }
    
     // static associate(models:any) {
       // define association here
@@ -37,8 +42,7 @@ module.exports = (sequelize:any, DataTypes:any) => {
       allowNull:false      
     },
     status:{
-      type:DataTypes.STRING,
-      allowNull:false      
+      type:DataTypes.STRING,    
     },
     current:{
         type:DataTypes.STRING,
@@ -50,3 +54,5 @@ module.exports = (sequelize:any, DataTypes:any) => {
   });
   return Recaudacion;
 };
+
+export default RecaudacionAttributes

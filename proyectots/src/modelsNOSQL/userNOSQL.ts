@@ -15,7 +15,13 @@ const UserModel = dynamodb.define('usuario',{
     awsCognitoId: joi.string().required(),
     name:joi.string().required(),
     role:joi.string().required().default(UserRoles.CUSTOMER),
-    email:joi.string().required().email()
+    email:joi.string().required().email(),
+    // recaudacion:joi.object({
+    //     id: joi.string().required(),
+    //     current:joi.number().required(),
+    //     goal:joi.number().required(),
+    //     proposito:joi.string().required()
+    // })
    },
    tableName:`Usuario${PREFIX_TABLE}`,
    indexes:[

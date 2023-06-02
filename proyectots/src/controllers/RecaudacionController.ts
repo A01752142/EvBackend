@@ -1,91 +1,91 @@
-import { Request,Response } from "express";
-import AbstractController from "./AbstractController";
-import { v4 as uuidv4 } from 'uuid';
-import RecaudacionModel from "../modelsNOSQL/recaudacionNOSQL";
+import { Request, Response } from "express";
+import { v4 as uuidv4} from 'uuid';
 import db from "../models";
-import UserModel from "../modelsNOSQL/userNOSQL";
+import AbstractController from "./AbstractController";
 
-class RecaudacionController extends AbstractController{
-    protected validateBody(type: any) {
-        throw new Error("Method not implemented.");
+
+// import RecaudacionAttributes from "../models/recaudacion"
+import RecaudacionModel from "../modelsNOSQL/recaudacionNOSQL";
+class RecaudacionController extends AbstractController {
+  protected validateBody(type: any) {
+    throw new Error("Method not implemented.");
+  }
+
+  //Singleton
+  private static instance: RecaudacionController;
+  public static getInstance(): AbstractController {
+    if (this.instance) {
+      return this.instance;
     }
-    
-    public generateUserId(): string {
+    this.instance = new RecaudacionController("recaudacion");
+    return this.instance;
+  }
+  public generateUserId(): string {
     return uuidv4();
     }
+  
+  protected initRoutes(): void {
+    this.router.post("/donacion",this.authMiddleware.verifyToken,this.donacion.bind(this));
+    this.router.post("/configurar",this.authMiddleware.verifyToken,this.configurar.bind(this));
+    this.router.get("/totalDonaciones",this.authMiddleware.verifyToken,this.totalDonaciones.bind(this));
+  }
 
-    //Singleton
-    private static instance:RecaudacionController;
+  async donacion(req: Request, res: Response) {
+    const { email, creador, donacion } = req.body;
+    try {
+      await db["User"].increment("monto", {
+        by: donacion,
+        where: { name: creador },
+      });
 
-    public static getInstance():AbstractController{
-        //si existe la instancia la regreso
-        if(this.instance){
-            return this.instance;
-        }
-        //si no exite la creo
-        this.instance = new RecaudacionController('recaudacion');
-        return this.instance;
-    } 
-
-    //Configurar las rutas del controlador
-    protected initRoutes(): void {
-        this.router.post("/donacion",this.makeDonation.bind(this));
-        this.router.post("/configurar",this.configureGoal.bind(this));
-        this.router.get("/totalDonaciones", this.getTotalDonations.bind(this));
+      return res.status(200).send({
+        message: `Donacion recibida`,
+      }).end();
+    } catch (error: any) {
+      res.status(500).send({ code: error.code, message: "error en donacion" });
     }
+  }
 
-    //Los métodos asociados a las rutas
-    private async makeDonation(req:Request,res:Response){
-        //res.status(200).send("Servicio en línea  😄");
-        const {id,goal,current,status,proposito} = req.body;
-        try{
-            const id_correct = await RecaudacionModel.donacion (id,current,[{
-                id:this.generateUserId, //destino de donacion
-                current:0
-            }])
-            console.log('Donacion exitosa',id_correct);
-            //Creación del usuario dentro de la BDNoSQL-DynamoDB
-            await UserModel.create({
-                id,
-                current
-            },
-            {overwrite:false});
-            //Creación del usuario dentro de RDS-MySQL
-            await db['Recaudacion'].create(
-                {
-                    id,
-                    current
-                }
-            )
-            res.status(201).send({message:"Donation Ready"})
-        }catch(error:any){
-            res.status(500).send({code:error.code,message:error.message});
-        }
-    }
-    private configureGoal(req:Request,res:Response){
-        res.status(200).send("Registro exitoso");
-        /*const {goal,proposito} = req.body;
-        await RecaudacionModel.create({
-            id:this.generateUserId,
-            current:0,
-            status:"prueba",
+  async configurar(req: Request, res: Response) {
+    const { email, proposito, goal } = req.body;
+    // const recaudacion=await this.cognitoService.createRecaudacion(proposito,meta)
+    const id=this.generateUserId();
+    try {
+        const Backo= new RecaudacionModel({
+            id:id,
             proposito:proposito,
-            goal:goal
-        })
-        await db['Recaudacion'].create({
-            id:this.generateUserId,
-            current:0,
-            status:"prueba",
-            proposito:proposito,
-            goal:goal
-        })
-        res.status(200).send({message:"Recaudacion exitosa"})
+            goal:goal,
+            current:0
+        });
+        console.log("72")
+        // Backo.save();
+        console.log("74")
+        await db["User"].update(
+        { recaudacion: Backo},
+        {
+          where: {
+            email: email,
+          },
+        }
+      );
+      return res.status(200).send({ message: `Actualizacion Exitosa` });
+    } catch (error: any) {
+      res.status(500).send({ code: error.code, message: "error en generarUserId"});
     }
-    */
-    }
-    private  getTotalDonations(req:Request,res:Response){
-        res.status(200).send("Registro exitoso");
-    }
+  }
+
+  async totalDonaciones(req: Request, res: Response) {
+    const { email } = req.body;
+    const monto = await db["User"].findOne({
+      attributes: ["current"],
+      where: { email: email },
+    });
+    const meta = await db["User"].findOne({
+      attributes: ["recaudacion.goal"],
+      where: { name: email },
+    });
+    res.status(200).send(`Total Donaciones: ${monto.dataValues.monto}`);
+  }
 }
 
 export default RecaudacionController;

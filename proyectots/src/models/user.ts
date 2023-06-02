@@ -7,7 +7,12 @@ interface UserAttributes{
   name:string,
   role:string,
   email:string,
-  recaudacion:RecaudacionAttributes
+  // recaudacion:{
+  //   id:string,
+  //   goal:number,
+  //   current:number,
+  //   proposito:string
+  // }
 }
 
 
@@ -19,6 +24,7 @@ export enum UserRoles{
 }
 
 interface RecaudacionAttributes{
+  id:string
   goal:number,
   current:number,
   proposito:string
@@ -33,8 +39,9 @@ module.exports = (sequelize:any, DataTypes:any) => {
     recaudacion!:RecaudacionAttributes;
     static associate(models:any) {
       // define association here
-      User.belongsToMany(models.Project,{
-        through:'ProjectUser'
+      
+      User.belongsToMany(models.Recaudacion,{
+        through:'RecaudacionUser'
       })
     }
   }
@@ -58,10 +65,10 @@ module.exports = (sequelize:any, DataTypes:any) => {
       allowNull:false,
       unique:true
     },
-    recaudacion:{
-      type:DataTypes.JSON,
-      allowNull:false,
-    }
+    // recaudacion:{
+    //   type:DataTypes.JSON,
+    //   allowNull:true,
+    // }
   }, {
     sequelize,
     modelName: 'User',

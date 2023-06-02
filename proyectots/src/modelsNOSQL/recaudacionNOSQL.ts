@@ -5,9 +5,9 @@ import { PREFIX_TABLE } from "../config";
 const RecaudacionModel = dynamodb.define('recaudacion',{
 hashKey:'awsCognitoId',
    schema:{
-    id: joi.number().required(),
+    id: joi.string().required(),
     current:joi.number().required(),
-    status:joi.string().required(),
+   //  status:joi.string().required(),
     goal:joi.number().required(),
     proposito:joi.string().required()
    },

@@ -35,7 +35,8 @@ class UserController extends AbstractController{
     }
 
     private postCreateUser(req:Request,res:Response){
-        res.status(200).send("Registro exitoso");
+        res.status(200).send("Registro exitoso papi");
+        
     }
 }
 
