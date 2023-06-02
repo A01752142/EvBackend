@@ -7,7 +7,9 @@ interface UserAttributes{
   name:string,
   role:string,
   email:string,
-  // recaudacion:{
+  recaudacion:number,
+  goal:number,
+  proposito:string
   //   id:string,
   //   goal:number,
   //   current:number,
@@ -36,7 +38,9 @@ module.exports = (sequelize:any, DataTypes:any) => {
     name!:string;
     role!:string;
     email!:string;
-    recaudacion!:RecaudacionAttributes;
+    recaudacion!:number;
+    goal!:number;
+    proposito!:string;
     static associate(models:any) {
       // define association here
       
@@ -65,10 +69,19 @@ module.exports = (sequelize:any, DataTypes:any) => {
       allowNull:false,
       unique:true
     },
-    // recaudacion:{
-    //   type:DataTypes.JSON,
-    //   allowNull:true,
-    // }
+    recaudacion:{
+       type:DataTypes.DECIMAL(8,2),
+       allowNull:true,
+       defaultValue:0
+     },
+     goal:{
+      type:DataTypes.DECIMAL(8,2),
+      allowNull:true,
+     },
+     proposito:{
+      type:DataTypes.STRING,
+      allowNull:true,
+    },
   }, {
     sequelize,
     modelName: 'User',
